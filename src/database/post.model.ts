@@ -1,5 +1,5 @@
 import { User } from './user.model';
-import { Connection, Model, Schema, SchemaTypes } from 'mongoose';
+import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 
 interface Post extends Document {
   readonly title: string;
@@ -8,7 +8,7 @@ interface Post extends Document {
   readonly updatedBy?: Partial<User>;
 }
 
-type PostModel = Model<Post>
+type PostModel = Model<Post>;
 
 const PostSchema = new Schema<Post>(
   {
