@@ -5,8 +5,7 @@ import { from, Observable } from 'rxjs';
 
 @Injectable()
 export class PostService {
-  constructor(@Inject('POST_MODEL') private postModel: Model<Post>) {
-  }
+  constructor(@Inject('POST_MODEL') private postModel: Model<Post>) {}
 
   findAll(keyword?: string, skip = 0, limit = 10): Observable<Post[]> {
     if (keyword) {

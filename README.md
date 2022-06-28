@@ -1,5 +1,7 @@
 ## Description
-
+- RxJS 비동기 처리
+- 테스트 코드
+ 
 ## Installation
 
 ```bash
