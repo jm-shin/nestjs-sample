@@ -1,5 +1,5 @@
-import { User } from './user.model';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+import { User } from './user.model';
 
 interface Post extends Document {
   readonly title: string;

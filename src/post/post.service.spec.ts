@@ -4,6 +4,7 @@ import { FilterQuery, Model } from 'mongoose';
 import { Post } from '../database/post.model';
 import { POST_MODEL } from '../database/database.constants';
 import { lastValueFrom } from 'rxjs';
+import { REQUEST } from '@nestjs/core';
 
 describe('PostService', () => {
   let service: PostService;
@@ -31,10 +32,18 @@ describe('PostService', () => {
             findOneAndDelete: jest.fn(),
           },
         },
+        {
+          provide: REQUEST,
+          useValue: {
+            user: {
+              id: 'dummyId',
+            },
+          },
+        },
       ],
     }).compile();
 
-    service = await module.get<PostService>(PostService);
+    service = await module.resolve<PostService>(PostService);
     model = module.get<Model<Post>>(POST_MODEL);
   });
 
@@ -93,5 +102,31 @@ describe('PostService', () => {
     expect(model.find).lastCalledWith({
       title: { $regex: '.*' + '안녕하세요' + '.*' },
     });
+  });
+
+  it('should save post', async () => {
+    const toCreated = {
+      title: 'test title',
+      content: 'test content',
+    };
+
+    const toReturned = {
+      _id: '62b97040c8d9ffc6aae22f44',
+      ...toCreated,
+    } as Post;
+
+    jest
+      .spyOn(model, 'create')
+      .mockImplementation(() => Promise.resolve(toReturned));
+
+    const data = await lastValueFrom(service.save(toCreated));
+    expect(data._id).toBe('62b97040c8d9ffc6aae22f44');
+    expect(model.create).toBeCalledWith({
+      ...toCreated,
+      createdBy: {
+        _id: 'dummyId',
+      },
+    });
+    expect(model.create).toBeCalledTimes(1);
   });
 });
